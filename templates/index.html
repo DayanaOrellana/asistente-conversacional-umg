@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Asistente Conversacional UMG</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <h1>Asistente Conversacional UMG</h1>
+
+        
+        <div class="sesion">
+
+            <span>Hola, {{ session['nombre'] }}</span>
+
+            <a href="/historial">Ver historial</a>
+
+             {% if session.get('rol') == 'administrador' %}
+                <a href="/consultas-no-resueltas">
+                    Consultas no resueltas
+                </a>
+            {% endif %}
+
+            <a href="/logout" class="btn-logout">
+                 Cerrar sesión
+            </a>
+
+    </div>
+
+        <p>
+            Bienvenido al asistente conversacional para estudiantes de la
+            Universidad Mariano Gálvez.
+        </p>
+
+        <div class="chat">
+
+            <h2>¿En qué puedo ayudarte?</h2>
+
+            <form action="/preguntar" method="POST" class="entrada">
+            <input
+                type="text"
+                name="pregunta"
+                placeholder="Escribe tu consulta aquí..."
+                required
+            >
+
+    <button type="submit">Enviar</button>
+</form> 
+
+{% if respuesta %}
+<div class="respuesta">
+    <p><strong>Asistente UMG:</strong></p>
+    <p>{{ respuesta }}</p>
+</div>
+{% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>

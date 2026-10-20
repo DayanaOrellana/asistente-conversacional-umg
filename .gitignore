@@ -1,0 +1,20 @@
+# Credenciales privadas
+.env
+.env.*
+
+# Entorno virtual
+venv/
+.venv/
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+
+# Archivos de configuración privados
+*.log
+
+# Copia de respaldo del código
+app_respaldo.py
+
+# Script temporal de migración de contraseñas
+migrar_contrasenas.py

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas no resueltas - Asistente UMG</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="contenedor">
+        <h1>Consultas no resueltas</h1>
+
+        <p>Preguntas que el asistente aún no ha podido responder.</p>
+
+        {% for consulta in consultas %}
+
+            <div class="respuesta">
+                <p><strong>Consulta:</strong></p>
+                <p>{{ consulta.consulta }}</p>
+
+                <p>
+                    <strong>Fecha:</strong>
+                    {{ consulta.fecha_consulta }}
+                </p>
+
+                <p>
+                    <strong>Estado:</strong>
+                    {{ consulta.estado }}
+                </p>
+                <form action="/resolver-consulta" method="POST">
+
+    <input
+        type="hidden"
+        name="id_consulta"
+        value="{{ consulta.id_consulta }}"
+    >
+    
+<p><strong>Categoría de la consulta:</strong></p>
+
+<select name="id_categoria" required>
+    <option value="">Selecciona una categoría</option>
+    <option value="1">Procesos académicos</option>
+    <option value="2">Inscripciones</option>
+    <option value="3">Pagos</option>
+    <option value="4">Horarios</option>
+    <option value="5">Plataformas</option>
+    <option value="6">Información institucional</option>
+</select>
+
+    <p><strong>Respuesta del administrador:</strong></p>
+
+    <textarea
+        name="respuesta"
+        rows="4"
+        placeholder="Escribe aquí la respuesta oficial..."
+        required
+    ></textarea>
+
+    <button type="submit">
+        Guardar respuesta
+    </button>
+
+</form>
+
+
+<form action="/descartar-consulta" method="POST"
+      onsubmit="return confirm('¿Estás seguro de que deseas descartar esta consulta?');">
+
+    <input
+        type="hidden"
+        name="id_consulta"
+        value="{{ consulta.id_consulta }}"
+    >
+
+    <button type="submit">
+        Descartar consulta
+    </button>
+
+</form>
+
+            </div>
+
+        {% else %}
+
+            <p>No hay consultas pendientes.</p>
+
+        {% endfor %}
+
+        <p>
+            <a href="/">Volver al asistente</a>
+        </p>
+    </div>
+
+</body>
+</html>

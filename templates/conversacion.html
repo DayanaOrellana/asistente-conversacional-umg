@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversación - Asistente UMG</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <h1>Conversación</h1>
+
+        {% if mensajes %}
+
+            {% for mensaje in mensajes %}
+
+                <div class="respuesta">
+
+                    {% if mensaje['emisor'] == 'usuario' %}
+
+                        <p><strong>Tú:</strong></p>
+                        <p>{{ mensaje['contenido'] }}</p>
+
+                    {% else %}
+
+                        <p><strong>Asistente UMG:</strong></p>
+                        <p>{{ mensaje['contenido'] }}</p>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>No se encontraron mensajes en esta conversación.</p>
+
+        {% endif %}
+
+        <p>
+            <a href="/historial">Volver al historial</a>
+        </p>
+
+        <p>
+            <a href="/">Volver al asistente</a>
+        </p>
+
+    </div>
+
+</body>
+
+</html>

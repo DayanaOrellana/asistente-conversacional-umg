@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión - Asistente UMG</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <h1>Asistente Conversacional UMG</h1>
+
+        <p class="bienvenida">
+            Inicia sesión para acceder al asistente conversacional.
+        </p>
+
+        <h2>Iniciar sesión</h2>
+
+        <form action="/login" method="POST" class="form-login">
+
+            <input
+                type="email"
+                name="correo"
+                placeholder="Correo electrónico"
+                required
+            >
+
+            <input
+                type="password"
+                name="contrasena"
+                placeholder="Contraseña"
+                required
+            >
+
+            <button type="submit">
+                Ingresar
+            </button>
+
+        </form>
+
+        {% if error %}
+        <p class="mensaje-error">
+            {{ error }}
+        </p>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

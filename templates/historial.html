@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - Asistente UMG</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <h1>Historial de conversaciones</h1>
+
+        <p>
+            Hola, {{ session['nombre'] }}
+        </p>
+
+        {% if conversaciones %}
+
+            {% for conversacion in conversaciones %}
+
+                <div class="respuesta">
+                  <p>
+                     <strong>
+                        <a href="/conversacion/{{ conversacion['id_conversacion'] }}">
+                            {{ conversacion['titulo'] }}
+                         </a>
+                     </strong>
+                </p>
+
+                    <p>
+                        Fecha: {{ conversacion['fecha_inicio'] }}
+                    </p>
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                Todavía no tienes conversaciones guardadas.
+            </p>
+
+        {% endif %}
+
+        <p>
+            <a href="/">Volver al asistente</a>
+        </p>
+
+    </div>
+
+</body>
+</html>
