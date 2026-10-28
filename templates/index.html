@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,63 +10,461 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #102c50;
+        }
+
+        .pagina-asistente {
+            min-height: 100vh;
+            padding: 45px 25px;
+            background:
+                linear-gradient(
+                    rgba(8, 28, 55, 0.48),
+                    rgba(8, 28, 55, 0.65)
+                ),
+                url("{{ url_for('static', filename='2.webp') }}")
+                center center / cover fixed no-repeat;
+        }
+
+        .panel-asistente {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 25px;
+            background: transparent;
+            border-radius: 24px;
+            box-shadow: none;
+        }
+
+        /* ENCABEZADO */
+
+        .cabecera-asistente {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.35);
+        }
+
+        .logo-asistente {
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+        }
+
+        .titulo-asistente {
+            margin: 0;
+            color: white;
+            font-size: 30px;
+            line-height: 1.2;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .subtitulo-asistente {
+            margin: 8px 0 0;
+            color: #f0f4fa;
+            font-size: 15px;
+        }
+
+        /* BARRA DE SESIÓN */
+
+        .barra-sesion {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 22px 0;
+        }
+
+        .saludo-usuario {
+            font-weight: 600;
+            color: white;
+            font-size: 17px;
+        }
+
+        /* BOTONES DE ADMINISTRADOR Y ESTUDIANTE */
+
+        .enlaces-sesion {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+
+        .enlaces-sesion a {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 9px;
+            background: #eef3f9;
+            color: #193b68;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            transition: background 0.2s ease;
+        }
+
+        .enlaces-sesion a:hover {
+            background: #dce8f5;
+        }
+
+        .enlaces-sesion .salir-asistente {
+            background: #193b68;
+            color: white;
+        }
+
+        .enlaces-sesion .salir-asistente:hover {
+            background: #28578c;
+        }
+
+        /* MENSAJE DE BIENVENIDA */
+
+        .bienvenida-asistente {
+            margin: 25px 0;
+            padding: 30px;
+            border-radius: 18px;
+            background: rgba(18, 51, 91, 0.76);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.20);
+            color: white;
+        }
+
+        .bienvenida-asistente h2 {
+            margin: 0 0 12px;
+            color: white;
+            font-size: 27px;
+        }
+
+        .bienvenida-asistente p {
+            margin: 0;
+            color: #e4edf8;
+            line-height: 1.7;
+        }
+
+        /* ZONA DE CONSULTAS */
+
+        .zona-consulta {
+            padding: 25px 0 10px;
+        }
+
+        .zona-consulta h2 {
+            margin: 0 0 12px;
+            color: white;
+            font-size: 32px;
+        }
+
+        .descripcion-consulta {
+            margin-bottom: 20px;
+            color: #f0f4fa;
+        }
+
+        .formulario-consulta {
+            display: flex;
+            gap: 12px;
+        }
+
+        .formulario-consulta input {
+            flex: 1;
+            min-width: 0;
+            padding: 17px;
+            border: 1px solid #cbd7e5;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.96);
+            font-size: 16px;
+        }
+
+        .formulario-consulta input:focus {
+            outline: 2px solid #86a9d0;
+            border-color: #193b68;
+        }
+
+        .formulario-consulta button {
+            padding: 16px 28px;
+            border: none;
+            border-radius: 12px;
+            background: #193b68;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .formulario-consulta button:hover {
+            background: #28578c;
+        }
+
+        /* RESPUESTA DEL ASISTENTE */
+
+        .tarjeta-respuesta {
+            margin-top: 28px;
+            padding: 30px;
+            background: rgba(16, 39, 73, 0.68);
+            border: 1px solid rgba(147, 197, 253, 0.40);
+            border-left: 5px solid #3b82f6;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.20);
+            backdrop-filter: blur(8px);
+        }
+
+        .encabezado-respuesta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .icono-respuesta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.35);
+        }
+
+        .encabezado-respuesta h3 {
+            margin: 0;
+            color: white;
+            font-size: 22px;
+        }
+
+        .texto-respuesta {
+            margin: 0;
+            color: white;
+            line-height: 1.9;
+            font-size: 17px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        /* PIE DE PÁGINA */
+
+        .pie-asistente {
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.30);
+            text-align: center;
+            color: white;
+            font-size: 13px;
+        }
+
+        /* DISEÑO PARA CELULARES */
+
+        @media (max-width: 650px) {
+
+            .pagina-asistente {
+                padding: 20px 10px;
+            }
+
+            .panel-asistente {
+                padding: 15px;
+            }
+
+            .cabecera-asistente {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .titulo-asistente {
+                font-size: 24px;
+            }
+
+            .barra-sesion {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .enlaces-sesion {
+                justify-content: flex-end;
+                margin-left: 0;
+            }
+
+            .bienvenida-asistente {
+                padding: 22px;
+            }
+
+            .formulario-consulta {
+                flex-direction: column;
+            }
+
+            .formulario-consulta button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="contenedor">
+<div class="pagina-asistente">
 
-        <h1>Asistente Conversacional UMG</h1>
+    <main class="panel-asistente">
 
-        
-        <div class="sesion">
+        <!-- ENCABEZADO -->
 
-            <span>Hola, {{ session['nombre'] }}</span>
+        <header class="cabecera-asistente">
 
-            <a href="/historial">Ver historial</a>
+            <img
+                src="{{ url_for('static', filename='logo_umg.webp') }}"
+                alt="Logo de la Universidad Mariano Gálvez"
+                class="logo-asistente"
+            >
 
-             {% if session.get('rol') == 'administrador' %}
-                <a href="/consultas-no-resueltas">
-                    Consultas no resueltas
+            <div>
+                <h1 class="titulo-asistente">
+                    Asistente Conversacional UMG
+                </h1>
+
+                <p class="subtitulo-asistente">
+                    Universidad Mariano Gálvez · Campus Jutiapa
+                </p>
+            </div>
+
+        </header>
+
+        <!-- BARRA DE NAVEGACIÓN -->
+
+        <nav class="barra-sesion">
+
+            <span class="saludo-usuario">
+                Hola, {{ session['nombre'] }}
+            </span>
+
+            <div class="enlaces-sesion">
+
+                <!-- HISTORIAL -->
+                <a href="/historial">
+                    Ver historial
                 </a>
-            {% endif %}
 
-            <a href="/logout" class="btn-logout">
-                 Cerrar sesión
-            </a>
+                <!-- OPCIONES EXCLUSIVAS DEL ADMINISTRADOR -->
+                {% if session.get('rol') == 'administrador' %}
 
-    </div>
+                    <a href="/consultas-no-resueltas">
+                        Consultas no resueltas
+                    </a>
 
-        <p>
-            Bienvenido al asistente conversacional para estudiantes de la
-            Universidad Mariano Gálvez.
-        </p>
+                    <a href="{{ url_for('administrar_preguntas') }}">
+                        Administrar preguntas
+                    </a>
 
-        <div class="chat">
+                    <a href="/admin/usuarios">
+                        Administrar usuarios
+                    </a>
+
+                    <a href="{{ url_for('registrar_administrador') }}">
+                        Crear administrador
+                    </a>
+
+                {% endif %}
+
+                <!-- CERRAR SESIÓN -->
+                <a href="/logout" class="salir-asistente">
+                    Cerrar sesión
+                </a>
+
+            </div>
+
+        </nav>
+
+        <!-- MENSAJE DE BIENVENIDA -->
+
+        <section class="bienvenida-asistente">
+
+            <h2>
+                ¡Bienvenido a tu asistente universitario!
+            </h2>
+
+            <p>
+                Encuentra orientación sobre inscripciones,
+                pagos, horarios, plataformas universitarias,
+                procesos académicos y otros temas relacionados
+                con tus estudios.
+            </p>
+
+        </section>
+
+        <!-- CONSULTAS DEL ASISTENTE -->
+
+        <section class="zona-consulta">
 
             <h2>¿En qué puedo ayudarte?</h2>
 
-            <form action="/preguntar" method="POST" class="entrada">
-            <input
-                type="text"
-                name="pregunta"
-                placeholder="Escribe tu consulta aquí..."
-                required
+            <p class="descripcion-consulta">
+                Escribe tu pregunta y consulta la información
+                disponible en nuestro asistente.
+            </p>
+
+            <form
+                action="/preguntar"
+                method="POST"
+                class="formulario-consulta"
             >
 
-    <button type="submit">Enviar</button>
-</form> 
+                <input
+                    type="text"
+                    name="pregunta"
+                    placeholder="Ejemplo: ¿Cómo puedo inscribirme?"
+                    aria-label="Escribe tu consulta"
+                    required
+                >
 
-{% if respuesta %}
-<div class="respuesta">
-    <p><strong>Asistente UMG:</strong></p>
-    <p>{{ respuesta }}</p>
+                <button type="submit">
+                    Enviar pregunta
+                </button>
+
+            </form>
+
+            <!-- MOSTRAR RESPUESTA -->
+
+            {% if respuesta %}
+
+                <div class="tarjeta-respuesta">
+
+                    <div class="encabezado-respuesta">
+
+                        <span class="icono-respuesta">
+                            UMG
+                        </span>
+
+                        <h3>Respuesta del asistente</h3>
+
+                    </div>
+
+                    <p class="texto-respuesta">
+                        {{ respuesta }}
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <!-- PIE DE PÁGINA -->
+
+        <footer class="pie-asistente">
+            Proyecto académico · Universidad Mariano Gálvez
+            · Campus Jutiapa
+        </footer>
+
+    </main>
+
 </div>
-{% endif %}
-
-        </div>
-
-    </div>
 
 </body>
 </html>

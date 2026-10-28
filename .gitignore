@@ -18,3 +18,12 @@ app_respaldo.py
 
 # Script temporal de migración de contraseñas
 migrar_contrasenas.py
+
+# Respaldos de bases de datos
+*.sql.gz
+*.dump
+*.bak
+
+# Archivos temporales y respaldos
+*.zip
+*.backup

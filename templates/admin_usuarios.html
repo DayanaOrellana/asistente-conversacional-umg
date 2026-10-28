@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Administración de Usuarios - UMG</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white;
+
+            background:
+                linear-gradient(
+                    rgba(4, 17, 42, 0.80),
+                    rgba(4, 17, 42, 0.90)
+                ),
+                url("{{ url_for('static', filename='2.webp') }}")
+                center/cover fixed;
+        }
+
+        /* Contenedor principal */
+
+        .contenedor {
+            width: 90%;
+            max-width: 1250px;
+            margin: 35px auto;
+            padding: 30px;
+
+            background: rgba(9, 30, 65, 0.90);
+            border: 1px solid #65b9ff;
+            border-radius: 18px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .descripcion {
+            text-align: center;
+            color: #cbdcf0;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* Búsqueda y filtros */
+
+        .filtros {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        input,
+        select {
+            padding: 12px;
+            border: 1px solid #7dbaff;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #142b4d;
+            font-size: 14px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        select {
+            min-width: 180px;
+        }
+
+        /* Tabla de usuarios */
+
+        .tabla-contenedor {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 13px 10px;
+            text-align: left;
+            border-bottom: 1px solid #375a83;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #164c87;
+            color: white;
+            font-weight: bold;
+        }
+
+        tbody tr:hover {
+            background: rgba(100, 175, 255, 0.12);
+        }
+
+        /* Evitar que los correos deformen la tabla */
+
+        td:nth-child(3) {
+            overflow-wrap: anywhere;
+            min-width: 180px;
+        }
+
+        td:nth-child(6) {
+            white-space: nowrap;
+        }
+
+        /* Estados */
+
+        .estado-activo {
+            color: #8df0b2;
+            font-weight: bold;
+        }
+
+        .estado-inactivo {
+            color: #ffaaaa;
+            font-weight: bold;
+        }
+
+        /* Botones dentro de la tabla */
+
+        .acciones-usuario {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .acciones-usuario form {
+            margin: 0;
+        }
+
+        .boton-editar {
+            display: inline-block;
+            padding: 9px 13px;
+            background: #2584d8;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .boton-editar:hover {
+            background: #1268b4;
+        }
+
+        .boton-desactivar,
+        .boton-reactivar {
+            border: none;
+            border-radius: 7px;
+            padding: 9px 13px;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .boton-desactivar {
+            background: #c74747;
+        }
+
+        .boton-desactivar:hover {
+            background: #a52f2f;
+        }
+
+        .boton-reactivar {
+            background: #21865b;
+        }
+
+        .boton-reactivar:hover {
+            background: #176b47;
+        }
+
+        /* Mensaje cuando no hay resultados */
+
+        .sin-resultados {
+            text-align: center;
+            padding: 25px;
+            color: #d0e2f6;
+        }
+
+        /* Botón para volver */
+
+        .acciones-inferiores {
+            margin-top: 25px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .boton {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #2584d8;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .boton:hover {
+            background: #1268b4;
+        }
+
+        /* Adaptación a pantallas pequeñas */
+
+        @media (max-width: 768px) {
+            .contenedor {
+                width: 95%;
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            th,
+            td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+
+            .acciones-usuario {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <h1>Administración de Usuarios</h1>
+
+        <p class="descripcion">
+            Gestión de estudiantes y administradores registrados
+            en el Asistente Conversacional UMG.
+        </p>
+
+        <!-- Búsqueda y filtro por rol -->
+
+        <div class="filtros">
+
+            <input
+                type="text"
+                id="buscar"
+                placeholder="Buscar por nombre, apellido o correo..."
+                oninput="filtrarUsuarios()"
+            >
+
+            <select
+                id="filtroRol"
+                onchange="filtrarUsuarios()"
+            >
+                <option value="">Todos los roles</option>
+                <option value="estudiante">Estudiantes</option>
+                <option value="administrador">Administradores</option>
+            </select>
+
+        </div>
+
+        <!-- Tabla de usuarios -->
+
+        <div class="tabla-contenedor">
+
+            <table id="tablaUsuarios">
+
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Fecha de registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for usuario in usuarios %}
+
+                    <tr>
+
+                        <td>{{ usuario.nombre }}</td>
+
+                        <td>{{ usuario.apellido }}</td>
+
+                        <td>{{ usuario.correo }}</td>
+
+                        <td>{{ usuario.rol }}</td>
+
+                        <!-- Estado del usuario -->
+
+                        <td>
+                            {% if usuario.estado == 'activo' %}
+
+                                <span class="estado-activo">
+                                    Activo
+                                </span>
+
+                            {% else %}
+
+                                <span class="estado-inactivo">
+                                    Inactivo
+                                </span>
+
+                            {% endif %}
+                        </td>
+
+                        <!-- Fecha de registro -->
+
+                        <td>
+                            {{ usuario.fecha_registro.strftime('%d/%m/%Y %H:%M')
+                               if usuario.fecha_registro else 'Sin fecha' }}
+                        </td>
+
+                        <!-- Acciones -->
+
+                        <td>
+
+                            <div class="acciones-usuario">
+
+                                <!-- Botón Editar -->
+
+                                <a
+                                    href="{{ url_for('editar_usuario', id_usuario=usuario.id_usuario) }}"
+                                    class="boton-editar"
+                                >
+                                    Editar
+                                </a>
+
+                                <!-- Evitar cambiar el estado de la propia cuenta -->
+
+                                {% if usuario.id_usuario != session['id_usuario'] %}
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('cambiar_estado_usuario', id_usuario=usuario.id_usuario) }}"
+                                        onsubmit="return confirm('¿Estás seguro de que deseas cambiar el estado de esta cuenta?');"
+                                    >
+
+                                        {% if usuario.estado == 'activo' %}
+
+                                            <button
+                                                type="submit"
+                                                class="boton-desactivar"
+                                            >
+                                                Desactivar
+                                            </button>
+
+                                        {% else %}
+
+                                            <button
+                                                type="submit"
+                                                class="boton-reactivar"
+                                            >
+                                                Reactivar
+                                            </button>
+
+                                        {% endif %}
+
+                                    </form>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <p
+                id="sinResultados"
+                class="sin-resultados"
+                style="display: none;"
+            >
+                No se encontraron usuarios.
+            </p>
+
+        </div>
+
+        <!-- Navegación -->
+
+        <div class="acciones-inferiores">
+
+            <a href="/" class="boton">
+                Volver al inicio
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Filtros de búsqueda -->
+
+    <script>
+
+        function filtrarUsuarios() {
+
+            const busqueda = document
+                .getElementById("buscar")
+                .value.toLowerCase().trim();
+
+            const rol = document
+                .getElementById("filtroRol")
+                .value;
+
+            const filas = document.querySelectorAll(
+                "#tablaUsuarios tbody tr"
+            );
+
+            let encontrados = 0;
+
+            filas.forEach(fila => {
+
+                const nombre = fila.cells[0]
+                    .textContent.toLowerCase();
+
+                const apellido = fila.cells[1]
+                    .textContent.toLowerCase();
+
+                const correo = fila.cells[2]
+                    .textContent.toLowerCase();
+
+                const rolUsuario = fila.cells[3]
+                    .textContent.toLowerCase().trim();
+
+                const coincideBusqueda =
+                    nombre.includes(busqueda) ||
+                    apellido.includes(busqueda) ||
+                    correo.includes(busqueda);
+
+                const coincideRol =
+                    rol === "" || rolUsuario === rol;
+
+                if (coincideBusqueda && coincideRol) {
+
+                    fila.style.display = "";
+                    encontrados++;
+
+                } else {
+
+                    fila.style.display = "none";
+
+                }
+
+            });
+
+            document.getElementById(
+                "sinResultados"
+            ).style.display =
+                encontrados === 0 ? "block" : "none";
+
+        }
+
+        filtrarUsuarios();
+
+    </script>
+
+</body>
+</html>

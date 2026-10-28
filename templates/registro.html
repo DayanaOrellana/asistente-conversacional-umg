@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registro de estudiantes | Asistente UMG</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white;
+
+            background:
+                linear-gradient(
+                    rgba(9, 18, 35, 0.62),
+                    rgba(9, 18, 35, 0.78)
+                ),
+                url("{{ url_for('static', filename='campus_jutiapa.webp') }}")
+                center center / cover no-repeat fixed;
+        }
+
+        /* Contenedor principal */
+
+        .pagina-registro {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 20px;
+        }
+
+        .contenido {
+            width: 100%;
+            max-width: 520px;
+        }
+
+        /* Títulos */
+
+        h1 {
+            font-size: 34px;
+            text-align: center;
+            margin: 0 0 10px;
+            font-weight: bold;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .subtitulo {
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            color: #f1f5f9;
+        }
+
+        /* Etiquetas */
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        /* Campos del formulario */
+
+        input {
+            width: 100%;
+            padding: 13px 16px;
+            margin-bottom: 15px;
+
+            border: 1px solid #9daabe;
+            border-radius: 10px;
+
+            background: rgba(17, 31, 56, 0.88);
+            color: white;
+
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        input::placeholder {
+            color: #d5dbe5;
+        }
+
+        input:focus {
+            outline: 2px solid #7ba8ed;
+            border-color: #7ba8ed;
+        }
+
+        /* Botón de registro */
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 5px;
+
+            background: #1d3e6b;
+            color: white;
+
+            border: 1px solid #4075b7;
+            border-radius: 10px;
+
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #285487;
+        }
+
+        /* Mensaje de error */
+
+        .error {
+            background: rgba(150, 25, 25, 0.9);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        /* Enlace al inicio de sesión */
+
+        .login-link {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 14px;
+            color: #f1f5f9;
+        }
+
+        .login-link a {
+            color: #a9cbff;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .login-link a:hover {
+            color: white;
+        }
+
+        /* Adaptación a celulares */
+
+        @media (max-width: 600px) {
+            .pagina-registro {
+                padding: 20px 15px;
+            }
+
+            .contenido {
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .subtitulo {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+
+            input {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 13px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="pagina-registro">
+
+        <div class="contenido">
+
+            <h1>Registro de estudiantes</h1>
+
+            <p class="subtitulo">
+                Universidad Mariano Gálvez de Guatemala
+                <br>
+                Asistente Conversacional UMG
+            </p>
+
+            {% if error %}
+                <div class="error">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="{{ url_for('registro') }}" method="POST">
+
+                <!-- Nombre -->
+
+                <label for="nombre">Nombre</label>
+
+                <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    placeholder="Ingresa tu nombre"
+                    maxlength="100"
+                    autocomplete="given-name"
+                    required
+                >
+
+                <!-- Apellido -->
+
+                <label for="apellido">Apellido</label>
+
+                <input
+                    type="text"
+                    id="apellido"
+                    name="apellido"
+                    placeholder="Ingresa tu apellido"
+                    maxlength="100"
+                    autocomplete="family-name"
+                    required
+                >
+
+                <!-- Correo electrónico -->
+
+                <label for="correo">Correo electrónico</label>
+
+                <input
+                    type="email"
+                    id="correo"
+                    name="correo"
+                    placeholder="Ingresa tu correo electrónico"
+                    autocomplete="email"
+                    required
+                >
+
+                <!-- Contraseña -->
+
+                <label for="contrasena">Contraseña</label>
+
+                <input
+                    type="password"
+                    id="contrasena"
+                    name="contrasena"
+                    placeholder="Mínimo 8 caracteres"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <!-- Botón -->
+
+                <button type="submit">
+                    Crear cuenta
+                </button>
+
+            </form>
+
+            <!-- Regresar al inicio de sesión -->
+
+            <p class="login-link">
+                ¿Ya tienes una cuenta?
+                <a href="{{ url_for('login') }}">
+                    Inicia sesión aquí
+                </a>
+            </p>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
