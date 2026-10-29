@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva pregunta | Asistente UMG</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white;
+            background:
+                linear-gradient(
+                    rgba(9, 18, 35, 0.70),
+                    rgba(9, 18, 35, 0.85)
+                ),
+                url("{{ url_for('static', filename='2.webp') }}")
+                center center / cover no-repeat fixed;
+        }
+
+        .contenedor {
+            max-width: 760px;
+            width: 92%;
+            margin: 45px auto;
+        }
+
+        .encabezado {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .encabezado p {
+            color: #dbeafe;
+            line-height: 1.5;
+        }
+
+        .formulario {
+            background: rgba(16, 39, 73, 0.30);
+            border: 1px solid rgba(147, 197, 253, 0.35);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 23px;
+            border: 1px solid rgba(147, 197, 253, 0.5);
+            border-radius: 9px;
+            background: rgba(10, 26, 49, 0.40);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #aebdd1;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+
+        select option {
+            background: #193b67;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 125px;
+        }
+
+        .ayuda {
+            font-size: 12px;
+            color: #cbd5e1;
+            margin: -14px 0 22px;
+            line-height: 1.5;
+        }
+
+        .error {
+            background: rgba(153, 27, 27, 0.4);
+            border: 1px solid #f87171;
+            color: #fecaca;
+            padding: 13px;
+            border-radius: 9px;
+            margin-bottom: 20px;
+        }
+
+        .botones {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .guardar,
+        .cancelar {
+            flex: 1;
+            padding: 14px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .guardar {
+            border: none;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        .guardar:hover {
+            background: #1d4ed8;
+        }
+
+        .cancelar {
+            background: rgba(148, 163, 184, 0.2);
+            border: 1px solid #64748b;
+            color: white;
+        }
+
+        .cancelar:hover {
+            background: rgba(148, 163, 184, 0.35);
+        }
+
+        @media (max-width: 600px) {
+            .contenedor {
+                margin: 25px auto;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .formulario {
+                padding: 22px;
+            }
+
+            .botones {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="contenedor">
+
+        <header class="encabezado">
+            <h1>Agregar nueva pregunta</h1>
+            <p>
+                Panel administrativo |
+                Asistente Conversacional UMG
+            </p>
+        </header>
+
+        <section class="formulario">
+
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            
+        <form
+            action="{{ url_for('editar_pregunta', id_pregunta=pregunta.id_pregunta) }}"
+            method="POST"
+        >
+
+
+                <label for="pregunta">
+                    Pregunta *
+                </label>
+
+                <input
+                    type="text"
+                    id="pregunta"
+                    name="pregunta"
+                    placeholder="Escribe la pregunta del estudiante"
+                    value="{{ pregunta.pregunta }}"
+                    maxlength="500"
+                    required
+                >
+
+                <label for="id_categoria">
+                    Categoría *
+                </label>
+
+                <select
+                    id="id_categoria"
+                    name="id_categoria"
+                    required
+                >
+                    <option value="">
+                        Selecciona una categoría
+                    </option>
+
+                    
+                    {% for categoria in categorias %}
+                        <option
+                            value="{{ categoria.id_categoria }}"
+                            {% if categoria.id_categoria == pregunta.id_categoria %}selected{% endif %}
+                        >
+                            {{ categoria.nombre }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                <label for="respuesta">
+                    Respuesta *
+                </label>
+
+                
+                <textarea
+                    id="respuesta"
+                    name="respuesta"
+                    placeholder="Escribe la respuesta que proporcionará el asistente"
+                    required
+                >{{ pregunta.respuesta }}</textarea>
+
+
+                <label for="palabras_clave">
+                    Palabras clave (opcional)
+                </label>
+
+                <input
+                    type="text"
+                    id="palabras_clave"
+                    name="palabras_clave"
+                    placeholder="Ejemplo: inscripción, requisitos, matrícula"
+                    value="{{ pregunta.palabras_clave or '' }}"
+                    maxlength="500"
+                >
+
+                <p class="ayuda">
+                    Separa las palabras clave con comas.
+                    La pregunta se registrará como activa.
+                </p>
+
+                <div class="botones">
+
+                    <a
+                        href="{{ url_for('administrar_preguntas') }}"
+                        class="cancelar"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="guardar"
+                    >
+                        Guardar cambios
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

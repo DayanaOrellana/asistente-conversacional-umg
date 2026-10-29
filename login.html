@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión | Asistente UMG</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background:
+                linear-gradient(
+                    rgba(8, 24, 49, 0.25),
+                    rgba(8, 24, 49, 0.75)
+                ),
+                url("{{ url_for('static', filename='campus_jutiapa.webp') }}")
+                center center / cover no-repeat fixed;
+            color: white;
+        }
+
+        .login-pagina {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 35px 20px;
+        }
+
+        .login-contenido {
+            width: 100%;
+            max-width: 470px;
+            text-align: center;
+        }
+
+        .logo-universidad {
+            width: 125px;
+            height: 125px;
+            object-fit: contain;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-size: 34px;
+            line-height: 1.2;
+            margin: 0 0 18px;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .descripcion {
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            color: white;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-login {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
+        }
+
+        .form-login label {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .form-login input {
+            width: 100%;
+            padding: 17px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            border-radius: 12px;
+            background: rgba(23, 46, 78, 0.55);
+            backdrop-filter: blur(8px);
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .form-login input::placeholder {
+            color: #e0e7f1;
+        }
+
+        .form-login input:focus {
+            border-color: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.18);
+        }
+
+        .form-login button {
+            width: 100%;
+            margin-top: 12px;
+            padding: 17px;
+            border: 1px solid #4b79b2;
+            border-radius: 12px;
+            background: #193b68;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .form-login button:hover {
+            background: #28578c;
+        }
+
+        .mensaje-error {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(130, 20, 20, 0.85);
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 27px;
+            }
+
+            .logo-universidad {
+                width: 100px;
+                height: 100px;
+            }
+
+            .descripcion {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-pagina">
+
+        <div class="login-contenido">
+
+            <img
+                src="{{ url_for('static', filename='logo_umg.webp') }}"
+                alt="Logo Universidad Mariano Gálvez"
+                class="logo-universidad"
+            >
+
+            <h1>Asistente Conversacional UMG</h1>
+
+            <p class="descripcion">
+                ¡Bienvenido a tu espacio universitario!
+                Ingresa a tu cuenta para realizar consultas
+                académicas de forma rápida y sencilla.
+            </p>
+
+
+            {% if request.args.get('registro') == 'exitoso' %}
+            <div style="
+                background-color: #e6f4ea;
+                color: #176b3a;
+                padding: 15px;
+                border-radius: 10px;
+                text-align: center;
+                margin-bottom: 20px;
+                font-weight: bold;
+            ">
+                ¡Cuenta creada exitosamente!
+                Ya puedes iniciar sesión.
+            </div>
+        {% endif %}
+
+                {% if request.args.get('recuperacion') == 'exitosa' %}
+        <div style="
+            background-color: #e6f4ea;
+            color: #176b3a;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        ">
+            ¡Contraseña actualizada correctamente! Ya puedes iniciar sesión.
+        </div>
+        {% endif %}
+
+            <form action="/login" method="POST" class="form-login">
+
+                <label for="correo">Correo electrónico</label>
+                <input
+                    type="email"
+                    id="correo"
+                    name="correo"
+                    placeholder="Ingresa tu correo electrónico"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="contrasena">Contraseña</label>
+                <input
+                    type="password"
+                    id="contrasena"
+                    name="contrasena"
+                    placeholder="Ingresa tu contraseña"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button type="submit">Iniciar sesión</button>
+
+                <p style="text-align: center; margin-top: 15px;">
+    <a href="{{ url_for('recuperar_contrasena') }}"
+       style="color: #2563eb; text-decoration: none;">
+        ¿Olvidaste tu contraseña?
+    </a>
+</p>
+
+<p style="
+    text-align: center;
+    margin-top: 20px;
+    color: white;
+    font-size: 16px;
+">
+    ¿Aún no tienes una cuenta?
+    <a href="{{ url_for('registro') }}"
+       style="
+           color: #ffffff;
+           font-weight: bold;
+           text-decoration: underline;
+           margin-left: 5px;
+       ">
+        Crear cuenta
+    </a>
+</p>
+            </form>
+
+            {% if error %}
+                <p class="mensaje-error">{{ error }}</p>
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</body>
+</html>
