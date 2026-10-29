@@ -18,7 +18,7 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 @app.before_request
 def verificar_usuario_activo():
 
-    
+
 
     # Rutas que se pueden visitar sin iniciar sesión
     rutas_publicas = {
@@ -36,6 +36,7 @@ def verificar_usuario_activo():
     if 'id_usuario' not in session:
         return None
 
+    conexion.ping(reconnect=True, attempts=3, delay=1)
     cursor = conexion.cursor(dictionary=True)
 
     try:
@@ -311,6 +312,7 @@ def login():
         correo = request.form['correo'].strip().lower()
         contrasena = request.form['contrasena']
 
+        conexion.ping(reconnect=True, attempts=3, delay=1)
         cursor = conexion.cursor(dictionary=True)
 
         cursor.execute("""
@@ -488,6 +490,7 @@ def restablecer_contrasena(token):
     except (SignatureExpired, BadSignature, ValueError, TypeError):
         return "El enlace de recuperación no es válido o ha vencido.", 400
 
+    conexion.ping(reconnect=True, attempts=3, delay=1)
     cursor = conexion.cursor(dictionary=True)
 
     try:
@@ -1081,7 +1084,7 @@ def editar_pregunta(id_pregunta):
             FROM categorias
             ORDER BY nombre
         """)
-        
+
         categorias = cursor.fetchall()
 
         # Guardar modificaciones realizadas por el administrador
@@ -1198,10 +1201,10 @@ def cambiar_estado_pregunta(id_pregunta):
 def consultas_no_resueltas():
     if 'id_usuario' not in session:
         return redirect('/login')
-    
+
     if session.get('rol') != 'administrador':
         return "Acceso denegado. Solo los administradores pueden ver esta página.", 403
-    
+
     cursor = conexion.cursor(dictionary=True)
 
     cursor.execute("""
@@ -1230,7 +1233,7 @@ def resolver_consulta():
     id_consulta = request.form['id_consulta']
     respuesta = request.form['respuesta'].strip()
     id_categoria = request.form['id_categoria']
-    
+
     if not respuesta:
         return "Debes escribir una respuesta.", 400
 
